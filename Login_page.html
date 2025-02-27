@@ -13,12 +13,12 @@
 
         <div class="input_box">
             <i class="fa-solid fa-user"></i>
-            <input type="text" placeholder="Username">
+            <input type="text" id="email" placeholder="Username">
         </div>
 
         <div class="input_box">
             <i class="fa-solid fa-lock"></i>
-            <input type="password" placeholder="Password">
+            <input type="password" id="password" placeholder="Password">
         </div>
 
         <div class="remember_forget_box">
@@ -34,6 +34,63 @@
             Don't have an account?
             <a href="#">Register</a>
         </p>
+
+        <div class="messege_box"></div>
+
     </form>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        
+        
+        const btn = document.querySelector(".login_btn");
+        const messege = document.querySelector(".messege_box");
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "Add your API key",
+          authDomain: "login-effa5.firebaseapp.com",
+          projectId: "login-effa5",
+          storageBucket: "login-effa5.firebasestorage.app",
+          messagingSenderId: "700245942672",
+          appId: "1:700245942672:web:475d07c3821e2eb75ed315"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        btn.addEventListener("click", function(event){
+            const email = document.getElementById("email").value;
+             const password = document.getElementById("password").value;
+            event.preventDefault();
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed up 
+                const user = userCredential.user;
+                messege.textContent = "Account succefully created!";
+                messege.classList.remove("error")
+                messege.classList.add("created");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode)
+                messege.classList.add("error");
+                if(errorCode == "auth/email-already-in-use"){
+                    messege.textContent = "This email is already registered!";
+                }else if(errorCode == "auth/invalid-email"){
+                    messege.textContent = "The email format is incorrect!";
+                }else if(errorCode == "auth/weak-password"){
+                    messege.textContent = "The password must be at least 6 characters!";
+                }
+            });
+        })
+      </script>
+
 </body>
 </html>

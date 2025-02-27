@@ -112,3 +112,19 @@ body{
 .register a:hover{
     text-decoration: underline;
 }
+.created{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    background-color: green;
+    margin-top: 26px;
+    line-height: 40px;
+}
+.error{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    background-color: red;
+    margin-top: 26px;
+    line-height: 40px;
+}
