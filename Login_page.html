@@ -35,6 +35,13 @@
             <a href="#">Register</a>
         </p>
 
+        <div class="google_signin_box">
+            <button id="googleSignInBtn">
+                 <i class="fa-brands fa-google"></i> Sign in with Google
+            </button>
+        </div>
+
+        
         <div class="messege_box"></div>
 
     </form>
@@ -42,7 +49,13 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+
+
+
+       
+
+
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
         
@@ -50,9 +63,14 @@
         const btn = document.querySelector(".login_btn");
         const messege = document.querySelector(".messege_box");
 
+        const googleBtn = document.getElementById("googleSignInBtn");
+        const provider = new GoogleAuthProvider();
+
+
+
         // Your web app's Firebase configuration
         const firebaseConfig = {
-          apiKey: "Add your API key",
+          apiKey: "AIzaSyAD-k9KbyhxICRozHe015ykv97qM3_wrzQ",
           authDomain: "login-effa5.firebaseapp.com",
           projectId: "login-effa5",
           storageBucket: "login-effa5.firebasestorage.app",
@@ -61,8 +79,39 @@
         };
       
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);  
         const auth = getAuth(app);
+
+
+        googleBtn.addEventListener("click", function(event){
+
+            event.preventDefault();
+
+            signInWithPopup(auth, provider)
+            .then((result) => {
+                // The signed-in user info.
+                const user = result.user;
+                // IdP data available using getAdditionalUserInfo(result)
+                // ...
+
+                messege.textContent = "Account succefully created!";
+                messege.classList.remove("error")
+                messege.classList.add("created");
+
+            }).catch((error) => {
+                // Handle Errors here.
+                messege.classList.add("error");
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                if(errorCode == "auth/popup-closed-by-user"){
+                    messege.textContent = "Request was cancelled. Please try again.";
+                }
+            });
+        });
+
+
+
+
 
         btn.addEventListener("click", function(event){
             const email = document.getElementById("email").value;
